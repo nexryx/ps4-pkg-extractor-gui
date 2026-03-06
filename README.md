@@ -1,4 +1,4 @@
-# pkgextract
+# ps4-pkg-extractor
 
 Simple Rust CLI for extracting PlayStation 4 `.pkg` files.
 
@@ -11,22 +11,14 @@ Simple Rust CLI for extracting PlayStation 4 `.pkg` files.
 
 ## Installation
 
-### With `cargo`
+Download the latest binary for your platform from the GitHub Releases page:
+
+- [Releases](https://github.com/paulomanrique/ps4-pkg-extractor/releases)
+
+After downloading, make the binary executable on Unix systems if needed:
 
 ```bash
-cargo install --path .
-```
-
-### Local build
-
-```bash
-cargo build --release
-```
-
-Generated binary:
-
-```text
-target/release/pkgextract
+chmod +x pkgextract
 ```
 
 ## Usage
@@ -47,21 +39,6 @@ pkgextract CUSA00000.pkg
 pkgextract CUSA00000.pkg -o extracted/CUSA00000
 pkgextract CUSA00000.pkg -f
 ```
-
-## GitHub Releases
-
-When a GitHub Release is published, the workflow builds and uploads binaries for:
-
-- Windows x64
-- Windows ARM64
-- Linux x64
-- Linux ARM64
-- macOS Intel
-- macOS Apple Silicon
-
-## Notice
-
-Use this software only with files you own and are legally allowed to process.
 
 ## License
 
