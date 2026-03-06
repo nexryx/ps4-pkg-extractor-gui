@@ -1,0 +1,81 @@
+name: Build and Publish Binaries
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload:
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows x64
+            os: windows-2022
+            target: x86_64-pc-windows-msvc
+            bin: pkgextract.exe
+            ext: .exe
+          - name: Windows ARM64
+            os: windows-2022
+            target: aarch64-pc-windows-msvc
+            bin: pkgextract.exe
+            ext: .exe
+          - name: Linux x64
+            os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            bin: pkgextract
+            ext: ""
+          - name: Linux ARM64
+            os: ubuntu-24.04
+            target: aarch64-unknown-linux-gnu
+            bin: pkgextract
+            ext: ""
+          - name: macOS Intel
+            os: macos-13
+            target: x86_64-apple-darwin
+            bin: pkgextract
+            ext: ""
+          - name: macOS Apple Silicon
+            os: macos-14
+            target: aarch64-apple-darwin
+            bin: pkgextract
+            ext: ""
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install Linux ARM64 linker
+        if: matrix.target == 'aarch64-unknown-linux-gnu'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Build release binary
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+        run: cargo build --release --locked --target ${{ matrix.target }}
+
+      - name: Prepare asset
+        shell: bash
+        run: |
+          mkdir -p dist
+          asset_name="pkgextract-${{ matrix.target }}${{ matrix.ext }}"
+          cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "dist/${asset_name}"
+          echo "ASSET_PATH=dist/${asset_name}" >> "$GITHUB_ENV"
+
+      - name: Upload binary to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ASSET_PATH }}
