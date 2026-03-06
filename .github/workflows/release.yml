@@ -18,32 +18,32 @@ jobs:
             os: windows-2022
             target: x86_64-pc-windows-msvc
             bin: pkgextract.exe
-            ext: .exe
+            archive_bin: pkgextract.exe
           - name: Windows ARM64
             os: windows-2022
             target: aarch64-pc-windows-msvc
             bin: pkgextract.exe
-            ext: .exe
+            archive_bin: pkgextract.exe
           - name: Linux x64
             os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
             bin: pkgextract
-            ext: ""
+            archive_bin: pkgextract
           - name: Linux ARM64
             os: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
             bin: pkgextract
-            ext: ""
+            archive_bin: pkgextract
           - name: macOS Intel
             os: macos-15-intel
             target: x86_64-apple-darwin
             bin: pkgextract
-            ext: ""
+            archive_bin: pkgextract
           - name: macOS Apple Silicon
             os: macos-15
             target: aarch64-apple-darwin
             bin: pkgextract
-            ext: ""
+            archive_bin: pkgextract
 
     runs-on: ${{ matrix.os }}
 
@@ -71,8 +71,20 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          asset_name="pkgextract-${{ matrix.target }}${{ matrix.ext }}"
-          cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "dist/${asset_name}"
+          mkdir -p package
+          cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "package/${{ matrix.archive_bin }}"
+          asset_name="pkgextract-${{ matrix.target }}.zip"
+          python3 - "$asset_name" "${{ matrix.archive_bin }}" <<'PY'
+          import sys
+          import zipfile
+          asset_name = sys.argv[1]
+          archive_bin = sys.argv[2]
+          zip_path = f"dist/{asset_name}"
+          input_path = f"package/{archive_bin}"
+          arcname = archive_bin
+          with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+              zf.write(input_path, arcname=arcname)
+          PY
           echo "ASSET_PATH=dist/${asset_name}" >> "$GITHUB_ENV"
 
       - name: Upload binary to release

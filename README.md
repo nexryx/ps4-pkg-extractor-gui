@@ -15,7 +15,12 @@ Download the latest binary for your platform from the GitHub Releases page:
 
 - [Releases](https://github.com/paulomanrique/ps4-pkg-extractor/releases)
 
-After downloading, make the binary executable on Unix systems if needed:
+Each release asset is a `.zip` file containing a binary named `pkgextract`
+(`pkgextract.exe` on Windows).
+
+After downloading, extract the archive.
+
+On Unix systems, make the binary executable if needed:
 
 ```bash
 chmod +x pkgextract
