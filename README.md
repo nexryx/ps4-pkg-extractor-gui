@@ -1,4 +1,4 @@
-<img alt="PS4 PKG Extractor logo" width="95" src="assets/icon.svg" align="left">
+<img alt="PS4 PKG Extractor logo" width="1128" src="assets/icon.svg" align="left">
 
 ### `PS4 PKG Extractor`<br><sub><sup>Extract PlayStation 4 .pkg files, from a terminal or a window</sup></sub>
 
