@@ -17,39 +17,44 @@ jobs:
           - name: Windows x64
             os: windows-2022
             target: x86_64-pc-windows-msvc
-            bin: pkgextract.exe
-            archive_bin: pkgextract.exe
+            ext: .exe
           - name: Windows ARM64
             os: windows-2022
             target: aarch64-pc-windows-msvc
-            bin: pkgextract.exe
-            archive_bin: pkgextract.exe
+            ext: .exe
           - name: Linux x64
             os: ubuntu-24.04
             target: x86_64-unknown-linux-gnu
-            bin: pkgextract
-            archive_bin: pkgextract
+            ext: ""
           - name: Linux ARM64
             os: ubuntu-24.04
             target: aarch64-unknown-linux-gnu
-            bin: pkgextract
-            archive_bin: pkgextract
+            ext: ""
           - name: macOS Intel
             os: macos-15-intel
             target: x86_64-apple-darwin
-            bin: pkgextract
-            archive_bin: pkgextract
+            ext: ""
           - name: macOS Apple Silicon
             os: macos-15
             target: aarch64-apple-darwin
-            bin: pkgextract
-            archive_bin: pkgextract
+            ext: ""
 
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Check the tag matches the Cargo.toml version
+        shell: bash
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          version=$(grep -m1 '^version' Cargo.toml | sed -E 's/version *= *"([^"]+)".*/\1/')
+          if [ "${TAG#v}" != "$version" ]; then
+            echo "::error::Release tag '$TAG' does not match Cargo.toml version '$version'. Bump the version (and Cargo.lock), or retag."
+            exit 1
+          fi
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
@@ -71,19 +76,25 @@ jobs:
         shell: bash
         run: |
           mkdir -p dist
-          mkdir -p package
-          cp "target/${{ matrix.target }}/release/${{ matrix.bin }}" "package/${{ matrix.archive_bin }}"
+          mkdir -p package/licenses
+          release_dir="target/${{ matrix.target }}/release"
+          cp "$release_dir/pkgextract${{ matrix.ext }}" package/
+          cp LICENSE package/LICENSE
+          cp licenses/Figtree-OFL.txt licenses/Lucide-LICENSE.txt package/licenses/
           asset_name="pkgextract-${{ matrix.target }}.zip"
-          python3 - "$asset_name" "${{ matrix.archive_bin }}" <<'PY'
+          python3 - "$asset_name" <<'PY'
+          import os
           import sys
           import zipfile
-          asset_name = sys.argv[1]
-          archive_bin = sys.argv[2]
-          zip_path = f"dist/{asset_name}"
-          input_path = f"package/{archive_bin}"
-          arcname = archive_bin
+          zip_path = f"dist/{sys.argv[1]}"
           with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-              zf.write(input_path, arcname=arcname)
+              for root, _, files in os.walk("package"):
+                  for name in sorted(files):
+                      full = os.path.join(root, name)
+                      info = zipfile.ZipInfo.from_file(full, os.path.relpath(full, "package"))
+                      info.compress_type = zipfile.ZIP_DEFLATED
+                      with open(full, "rb") as handle:
+                          zf.writestr(info, handle.read())
           PY
           echo "ASSET_PATH=dist/${asset_name}" >> "$GITHUB_ENV"
 

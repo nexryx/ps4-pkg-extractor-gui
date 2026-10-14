@@ -1,0 +1,116 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: pkgextract-gui\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Extract PlayStation 4 .pkg files"
+msgstr "Ekstrak berkas .pkg PlayStation 4"
+
+msgid "Theme"
+msgstr "Tema"
+
+msgid "Language"
+msgstr "Bahasa"
+
+msgid "PKG file"
+msgstr "Berkas PKG"
+
+msgid "Drop a .pkg file here"
+msgstr "Seret dan lepas berkas .pkg di sini"
+
+msgid "or click to browse"
+msgstr "atau klik untuk memilih"
+
+msgid "Release to open"
+msgstr "Lepas untuk membuka"
+
+msgid "Change"
+msgstr "Ganti"
+
+msgid "Output folder"
+msgstr "Folder tujuan"
+
+msgid "Defaults to a folder next to the PKG"
+msgstr "Bawaan: satu folder dengan berkas PKG"
+
+msgid "Browse"
+msgstr "Telusuri"
+
+msgid "Replace existing output folder"
+msgstr "Timpa folder tujuan yang sudah ada"
+
+msgid "The folder is deleted before extracting"
+msgstr "Folder akan dihapus sebelum ekstraksi"
+
+msgid "This folder already exists"
+msgstr "Folder ini sudah ada"
+
+msgid "Extract"
+msgstr "Ekstrak"
+
+msgid "Extracting"
+msgstr "Mengekstrak"
+
+msgid "Reading package entries"
+msgstr "Membaca entri paket"
+
+msgid "Extracting files"
+msgstr "Mengekstrak berkas"
+
+msgid "{done} of {total} files"
+msgstr "{done} dari {total} berkas"
+
+msgid "{written} written"
+msgstr "{written} ditulis"
+
+msgid "Elapsed {time}"
+msgstr "Berlalu {time}"
+
+msgid "Extraction finished"
+msgstr "Ekstraksi selesai"
+
+msgid "Completed in {time}"
+msgstr "Selesai dalam {time}"
+
+msgid "Skipped, no decryption key: {count}"
+msgstr "Dilewati karena tidak ada kunci dekripsi: {count}"
+
+msgid "Open folder"
+msgstr "Buka folder"
+
+msgid "Copy path"
+msgstr "Salin jalur"
+
+msgid "Copy error"
+msgstr "Salin pesan galat"
+
+msgid "Copied"
+msgstr "Tersalin"
+
+msgid "Extraction failed"
+msgstr "Ekstraksi gagal"
+
+msgid "Dismiss"
+msgstr "Tutup"
+
+msgid "Loading themes..."
+msgstr "Memuat tema..."
+
+msgid "The selected theme is missing"
+msgstr "Tema yang dipilih tidak ditemukan"
+
+msgid "Themes could not be listed"
+msgstr "Daftar tema tidak dapat dimuat"
+
+msgid "Choose a .pkg file to begin"
+msgstr "Pilih berkas .pkg untuk memulai"
+
+msgid "Ready to extract"
+msgstr "Siap diekstrak"
+
+msgid "New extraction"
+msgstr "Ekstraksi baru"
